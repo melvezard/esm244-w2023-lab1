@@ -15,3 +15,21 @@ library(tmap) #mapping package
 ```
 
 
+### Read in data (shortcut: control,alt,i to add code chunk)
+```{r}
+sf_trees <- read_csv(here("data", "sf_trees", "sf_trees.csv")) #read_csv is preferred over read.csv b/c it's improved version
+
+top_5_status <- sf_trees %>%
+  group_by(legal_status) %>%
+  summarize(tree_count = n()) %>%
+  slice_max(tree_count, n = 5) %>% #find the values of that variable & keep only the top 5
+  arrange(tree_count)
+
+ggplot(data = top_5_status, aes(x = fct_reorder(legal_status, tree_count),
+                                y = tree_count)) +
+  geom_col()+
+  labs(y = 'tree count', x = 'Legal Status') +
+  coord_flip() +
+  theme_minimal()
+```
+
